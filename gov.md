@@ -118,9 +118,6 @@ permalink: /gov/
   <li><a href="{{ site.baseurl }}/assets/govuk/assets/fonts/bold-affa96571d-v2.woff">download woff2 (baseurl)</a></li>
 </ul>
 
-  
-
-{{ page.title }}
 
 <!-- radio group -->
 
