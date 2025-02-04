@@ -229,15 +229,20 @@ permalink: /gov/
   </div>
 </div>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-s">Full width column</h2>
-        <p class="govuk-body">Not -l copy here: This is a paragraph inside a full-width column</p>
-      </div>
-      <div class="govuk-grid-column-one-third">
-        <h2 class="govuk-heading-m">1/3</h2>
-      </div>
-    </div>
+
+
+
+
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h2 class="govuk-heading-s">Full width column</h2>
+    <p class="govuk-body">Not -l copy here: This is a paragraph inside a full-width column</p>
+  </div>
+  <div class="govuk-grid-column-one-third">
+    <h2 class="govuk-heading-m">1/3</h2>
+  </div>
+</div>
 
   </main>
 
