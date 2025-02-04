@@ -108,8 +108,19 @@ permalink: /gov/
   <a href="#" class="govuk-back-link">Back</a>
   
   <h3 class="govuk-heading-m">Image path test</h3>
-
   <img src="../assets/govuk/assets/images/govuk-icon-180.png">
+
+  <h3 class="govuk-heading-m">Font path test</h3>
+
+<p class="govuk-body">Download font files using two path types:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li><a href="../assets/govuk/assets/fonts/bold-affa96571d-v2.woff">download woff2 (../)</a></li>
+  <li><a href="{{ site.baseurl }}/assets/govuk/assets/fonts/bold-affa96571d-v2.woff">download woff2 (baseurl)</a></li>
+</ul>
+
+  
+
+{{ page.title }}
 
 <!-- radio group -->
 
