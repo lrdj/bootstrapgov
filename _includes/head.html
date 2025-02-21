@@ -13,6 +13,16 @@
 	<link rel="stylesheet" href="{{ site.baseurl }}/assets/govuk/govuk-frontend.min.css">
 
 	<style>
+
+		/*
+
+  --govuk-frontend-breakpoint-mobile: 20rem;
+  --govuk-frontend-breakpoint-tablet: 40.0625rem;
+  --govuk-frontend-breakpoint-desktop: 48.0625rem;
+
+		*/
+
+
 	  @font-face {
 	    font-family: "GDS Transport";
 	    src: url("{{ site.baseurl }}/assets/govuk/assets/fonts/light-94a07e06a1-v2.woff2") format("woff2"),
@@ -63,25 +73,25 @@
 		    background-color: #e0e0e0; /* Light gray on hover */
 		}
 
-/* Scoped to only apply flexbox centering to the hero section */
-.cl-hero {
-    display: flex;
-    align-items: center; /* Vertically centers both columns */
-}
+		/* Scoped to only apply flexbox centering to the hero section */
+		.cl-hero {
+		    display: flex;
+		    align-items: center; /* Vertically centers both columns */
+		}
 
-/* Ensure the left column's content is vertically centered */
-.cl-hero .govuk-grid-column-one-half {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Centers content inside */
-    align-items: flex-start; /* Keeps text aligned left */
-}
+		/* Ensure the left column's content is vertically centered */
+		.cl-hero .govuk-grid-column-one-half {
+		    display: flex;
+		    flex-direction: column;
+		    justify-content: center; /* Centers content inside */
+		    align-items: flex-start; /* Keeps text aligned left */
+		}
 
-/* Keep buttons in a row */
-.cl-button-cluster {
-    display: flex;
-    gap: 10px; /* Adds spacing between buttons */
-}
+		/* Keep buttons in a row */
+		.cl-button-cluster {
+		    display: flex;
+		    gap: 10px; /* Adds spacing between buttons */
+		}
 
 
 	</style>
