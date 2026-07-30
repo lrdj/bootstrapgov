@@ -1,0 +1,21 @@
+---
+layout: default
+title: Content page
+permalink: /examples/content/
+---
+
+<a href="{{ site.baseurl }}/" class="govuk-back-link">Back</a>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-xl">
+      Heading goes here
+    </h1>
+
+    <p class="govuk-body">This is a paragraph of text. It explains in more detail what has happened and wraps across several lines.</p>
+
+    <p class="govuk-body">This paragraph has a link to <a class="govuk-link" href="#">find out more about this subject</a>.</p>
+
+  </div>
+</div>

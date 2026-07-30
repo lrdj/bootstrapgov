@@ -1,5 +1,5 @@
 function getBreakpoint(name) {
-  const property = `--govuk-frontend-breakpoint-${name}`;
+  const property = `--govuk-breakpoint-${name}`;
   const value = window.getComputedStyle(document.documentElement).getPropertyValue(property);
   return {
     property,
@@ -24,6 +24,12 @@ function isSupported($scope = document.body) {
     return false;
   }
   return $scope.classList.contains('govuk-frontend-supported');
+}
+function isArray(option) {
+  return Array.isArray(option);
+}
+function isObject(option) {
+  return !!option && typeof option === 'object' && !isArray(option);
 }
 function formatErrorMessage(Component, message) {
   return `${Component.moduleName}: ${message}`;
@@ -54,7 +60,7 @@ class SupportError extends GOVUKFrontendError {
 class ElementError extends GOVUKFrontendError {
   constructor(messageOrOptions) {
     let message = typeof messageOrOptions === 'string' ? messageOrOptions : '';
-    if (typeof messageOrOptions === 'object') {
+    if (isObject(messageOrOptions)) {
       const {
         component,
         identifier,
@@ -63,7 +69,9 @@ class ElementError extends GOVUKFrontendError {
       } = messageOrOptions;
       message = identifier;
       message += element ? ` is not of type ${expectedType != null ? expectedType : 'HTMLElement'}` : ' not found';
-      message = formatErrorMessage(component, message);
+      if (component) {
+        message = formatErrorMessage(component, message);
+      }
     }
     super(message);
     this.name = 'ElementError';
@@ -77,10 +85,10 @@ class InitError extends GOVUKFrontendError {
   }
 }
 /**
- * @typedef {import('../common/index.mjs').ComponentWithModuleName} ComponentWithModuleName
+ * @import { ComponentWithModuleName } from '../common/index.mjs'
  */
 
-class GOVUKFrontendComponent {
+class Component {
   /**
    * Returns the root element of the component
    *
@@ -131,16 +139,16 @@ class GOVUKFrontendComponent {
  */
 
 /**
- * @typedef {typeof GOVUKFrontendComponent & ChildClass} ChildClassConstructor
+ * @typedef {typeof Component & ChildClass} ChildClassConstructor
  */
-GOVUKFrontendComponent.elementType = HTMLElement;
+Component.elementType = HTMLElement;
 
 /**
  * Service Navigation component
  *
  * @preserve
  */
-class ServiceNavigation extends GOVUKFrontendComponent {
+class ServiceNavigation extends Component {
   /**
    * @param {Element | null} $root - HTML element to use for header
    */
@@ -196,9 +204,9 @@ class ServiceNavigation extends GOVUKFrontendComponent {
     }
     if (this.mql.matches) {
       this.$menu.removeAttribute('hidden');
-      this.$menuButton.setAttribute('hidden', '');
+      setAttributes(this.$menuButton, attributesForHidingButton);
     } else {
-      this.$menuButton.removeAttribute('hidden');
+      removeAttributes(this.$menuButton, Object.keys(attributesForHidingButton));
       this.$menuButton.setAttribute('aria-expanded', this.menuIsOpen.toString());
       if (this.menuIsOpen) {
         this.$menu.removeAttribute('hidden');
@@ -213,6 +221,34 @@ class ServiceNavigation extends GOVUKFrontendComponent {
   }
 }
 ServiceNavigation.moduleName = 'govuk-service-navigation';
+const attributesForHidingButton = {
+  hidden: '',
+  'aria-hidden': 'true'
+};
+
+/**
+ * Sets a group of attributes on the given element
+ *
+ * @param {Element} $element - The element to set the attribute on
+ * @param {{[attributeName: string]: string}} attributes - The attributes to set
+ */
+function setAttributes($element, attributes) {
+  for (const attributeName in attributes) {
+    $element.setAttribute(attributeName, attributes[attributeName]);
+  }
+}
+
+/**
+ * Removes a list of attributes from the given element
+ *
+ * @param {Element} $element - The element to remove the attributes from
+ * @param {string[]} attributeNames - The names of the attributes to remove
+ */
+function removeAttributes($element, attributeNames) {
+  for (const attributeName of attributeNames) {
+    $element.removeAttribute(attributeName);
+  }
+}
 
 export { ServiceNavigation };
 //# sourceMappingURL=service-navigation.bundle.mjs.map

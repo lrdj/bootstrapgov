@@ -1,0 +1,29 @@
+---
+layout: default
+title: Confirmation page example
+permalink: /examples/confirmation/
+---
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <div class="govuk-panel govuk-panel--confirmation">
+      <h1 class="govuk-panel__title">Application complete</h1>
+      <div class="govuk-panel__body">
+        Your reference number<br><strong>HDJ2123F</strong>
+      </div>
+    </div>
+
+    <p class="govuk-body">
+      We have sent you a confirmation email.
+    </p>
+
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <p class="govuk-body">We've sent your application to Hackney Electoral Register Office.</p>
+    <p class="govuk-body">They will contact you either to confirm your registration, or to ask for more information.</p>
+    <p class="govuk-body"><a class="govuk-link" href="https://www.gov.uk/service-manual/user-centred-design/resources/patterns/feedback-pages">What did you think of this service?</a> (takes 30 seconds)</p>
+
+    <p class="govuk-body"><a class="govuk-link" href="{{ site.baseurl }}/examples/start/">Start again</a></p>
+
+  </div>
+</div>

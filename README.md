@@ -1,218 +1,103 @@
-# minima
+# Bootstrap govuk
 
-*Minima is a one-size-fits-all Jekyll theme for writers*. It's Jekyll's default (and first) theme. It's what you get when you run `jekyll new`.
+A GOV.UK-styled prototype you can preview locally and publish for free with GitHub Pages — no Heroku account, no Node server, no deploy pipeline to get past IT.
 
-[Theme preview](https://jekyll.github.io/minima/)
+## Why this exists
 
-![minima theme preview](/screenshot.png)
+The [GOV.UK Prototype Kit](https://prototype-kit.service.gov.uk/) is the standard tool for prototyping GOV.UK services, but sharing a kit prototype usually means deploying it somewhere — traditionally Heroku, sometimes another Node host. If you're working somewhere that won't let you sign up for Heroku, doesn't allow outbound Node deployments, or you just don't want to deal with a server at all, that's a hard blocker.
 
-## Installation
+This repo is the workaround. It's a plain [Jekyll](https://jekyllrb.com/) site — Jekyll turns simple text files into static HTML pages, and GitHub will host and rebuild it for you automatically every time you push, for free, at a `github.io` URL. There's no server to manage, no account to request access to, nothing running that can go down. You write pages, push to `main`, and GitHub Pages does the rest.
 
-Add this line to your Jekyll site's Gemfile:
+It uses the **real, current [GOV.UK Frontend](https://frontend.design-system.service.gov.uk/)** — the same CSS and JS that powers the actual Prototype Kit and real GOV.UK services — so anything you build here looks and behaves exactly as it would in the kit. It's not a lookalike.
 
-```ruby
-gem "minima"
+## What's different from the kit (read this first)
+
+This is the trade-off for not needing a server:
+
+- **No forms that submit anywhere.** The kit uses Node routes to handle form submissions, store session data, and branch between pages based on answers. This site can't do any of that — it's just HTML files. Buttons that would submit a form in the kit are plain links here, styled to look identical.
+- **No session data / "answers so far".** You can't show a user's own input back to them (`{{ data['question'] }}` style patterns don't exist here).
+- **You can still fake a journey.** Pages can link to each other in order, so a start page → question → check your answers → confirmation flow still *feels* like a real service, even though nothing is actually being submitted or stored. See `examples/` below — that's a working example of exactly this.
+
+If you need real form logic, session data, or branching, this isn't a substitute for the kit — it's specifically for the situation where you need something GOV.UK-shaped to look at or share, and running the kit properly isn't an option.
+
+## "I need routes.js" — what to do instead
+
+In the kit, `app/routes.js` is where you'd write server logic: show a different next page depending on what someone answered, remember their answers, call an API, that sort of thing. There's no equivalent here, because there's no server — so if you're reaching for routes.js, first check which of these you actually need:
+
+- **"Show a different page depending on the answer"** — you don't necessarily need real branching for this, you can *fake* it. Build both outcomes as separate static pages (`confirmation-eligible.md`, `confirmation-not-eligible.md`) and link each answer straight to the page it leads to. Zero JavaScript, and stakeholders clicking through genuinely can't tell the difference.
+- **"Remember an answer and use it on a later page"** (redirect based on a previous answer, populate a check-your-answers page with what someone actually typed) — this doesn't need a server either. "Static site" only means no server-side computation; it says nothing about JavaScript running in the browser. A small script using `localStorage` can save an answer on one page and read it back on the next, entirely client-side, and GitHub Pages serves it exactly the same as any other file. This is a good thing to ask an LLM for directly — describe the pages and what should carry over between them, and ask for a vanilla JS snippet using `localStorage` (no build step, no framework). Good enough for demos and usability testing; not real data storage, and answers won't survive someone clearing their browser data or switching devices.
+- **"I actually need a real backend"** — an API call needing a secret key, data that has to persist across devices or for other people to see, anything that genuinely can't run in one person's browser — there's no way round this without a Node server somewhere. Worth trying, roughly in order of effort:
+  1. Ask specifically for Heroku (or equivalent) access for this one project, rather than general hosting access — it's a much narrower, easier ask than it sounds, and this is exactly the kind of case that justifies it.
+  2. Run the real Prototype Kit **locally only** — you get full routes.js logic on your own machine, and share it as a screen recording or in a review session rather than a live link. Nothing to deploy, nothing to get sign-off for.
+  3. Look at free Node hosts that aren't Heroku (Glitch and Render both have free tiers as of writing) in case your organisation's block is Heroku-specific rather than blanket — worth a quick check with IT before assuming it's a dead end.
+
+## Getting started
+
+You'll need Ruby installed (check with `ruby -v` in Terminal — if that fails, install via [rbenv](https://github.com/rbenv/rbenv) or similar). Then, from this folder:
+
+```
+bundle install
+bundle exec jekyll serve
 ```
 
-And add this line to your Jekyll site:
+This starts a local preview server. Because the site is configured to eventually live at `github.io/bootstrapgov`, your local preview mirrors that — visit **`http://localhost:4000/bootstrapgov/`** (note the trailing path, it's easy to miss and land on a blank page without it).
+
+Leave `jekyll serve` running in a terminal window while you work — it rebuilds automatically every time you save a file, so you just refresh the browser to see changes.
+
+## Where things live
+
+| Folder / file | What it's for |
+|---|---|
+| `index.md`, `gov.md`, `component-test.md`, `examples/*.md` | **The actual pages.** Each one is mostly plain HTML with a short header block (front matter) on top. This is where you'll spend your time. |
+| `_layouts/default.html` | The page "frame" — GOV.UK header, footer, skip link — wrapped around every page's content. You shouldn't need to touch this. |
+| `_includes/` | Small reusable snippets (like the service navigation bar) pulled into layouts. |
+| `assets/govuk/` | The vendored GOV.UK Frontend package — the CSS/JS that makes everything look and behave like GOV.UK. Don't edit inside here; it gets replaced wholesale when the version is upgraded. |
+| `_config.yml` | Site-wide settings — the service name (`title:`) shown in the header, and the `baseurl` GitHub Pages needs (see below — don't touch this unless you know why). |
+
+## Adding a new page
+
+Create a new `.md` file anywhere in the project (or in `examples/` alongside the existing ones) with this at the top:
+
+```
+---
+layout: default
+title: My new page
+permalink: /my-new-page/
+---
+```
+
+Then write or paste your HTML underneath, with a blank line separating it from the block above. That's the whole recipe — Jekyll handles the rest.
+
+## Pulling components straight from the Design System
+
+This is the main trick worth knowing: you can go to the [GOV.UK Design System](https://design-system.service.gov.uk/components/), find a component (breadcrumbs, buttons, radios, whatever), copy the **HTML example** shown on that page, and paste it directly into one of this site's `.md` files. It'll just work — same classes, same CSS, same JS behaviour, because this site runs the same version of GOV.UK Frontend.
+
+Two things to watch for when pasting:
+1. Copy from the **"HTML" example code panel**, not the whole page — grabbing more than that can pull in the design system website's own extra wrapper markup, which isn't part of GOV.UK Frontend and won't do anything useful here.
+2. If a component has an `id` (form fields, mostly) and you paste more than one copy onto the same page, make the ids unique by hand — duplicate ids are the one thing that'll genuinely break.
+
+`component-test.md` in this repo is a working reference — it's a single page with one of nearly every component, copied straight from the vendored package, so you can see what "correctly pasted" looks like and copy the pattern.
+
+## The example journey
+
+`examples/start.md` → `question.md` → `check-your-answers.md` → `confirmation.md` is a small working demo of a typical GOV.UK service flow, click-through-able end to end. It's a good starting template if you're mocking up a real journey — duplicate these files and edit the content rather than starting from a blank page.
+
+## Publishing
+
+```
+git add .
+git commit -m "your message"
+git push
+```
+
+Once pushed to `main`, GitHub rebuilds and republishes the site automatically — no separate deploy step, no dashboard to click through. Give it a minute or two after pushing before checking the live URL.
+
+## The one setting not to touch: `baseurl`
+
+In `_config.yml`:
 
 ```yaml
-theme: minima
+baseurl: "/bootstrapgov"
 ```
 
-And then execute:
-
-    $ bundle
-
-
-## Contents At-A-Glance
-
-Minima has been scaffolded by the `jekyll new-theme` command and therefore has all the necessary files and directories to have a new Jekyll site up and running with zero-configuration.
-
-### Layouts
-
-Refers to files within the `_layouts` directory, that define the markup for your theme.
-
-  - `default.html` &mdash; The base layout that lays the foundation for subsequent layouts. The derived layouts inject their contents into this file at the line that says ` {{ content }} ` and are linked to this file via [FrontMatter](https://jekyllrb.com/docs/frontmatter/) declaration `layout: default`.
-  - `home.html` &mdash; The layout for your landing-page / home-page / index-page. [[More Info.](#home-layout)]
-  - `page.html` &mdash; The layout for your documents that contain FrontMatter, but are not posts.
-  - `post.html` &mdash; The layout for your posts.
-
-### Includes
-
-Refers to snippets of code within the `_includes` directory that can be inserted in multiple layouts (and another include-file as well) within the same theme-gem.
-
-  - `disqus_comments.html` &mdash; Code to markup disqus comment box.
-  - `footer.html` &mdash; Defines the site's footer section.
-  - `google-analytics.html` &mdash; Inserts Google Analytics module (active only in production environment).
-  - `head.html` &mdash; Code-block that defines the `<head></head>` in *default* layout.
-  - `header.html` &mdash; Defines the site's main header section. By default, pages with a defined `title` attribute will have links displayed here.
-
-### Sass
-
-Refers to `.scss` files within the `_sass` directory that define the theme's styles.
-
-  - `minima.scss` &mdash; The core file imported by preprocessed `main.scss`, it defines the variable defaults for the theme and also further imports sass partials to supplement itself.
-  - `minima/_base.scss` &mdash; Resets and defines base styles for various HTML elements.
-  - `minima/_layout.scss` &mdash; Defines the visual style for various layouts.
-  - `minima/_syntax-highlighting.scss` &mdash; Defines the styles for syntax-highlighting.
-
-### Assets
-
-Refers to various asset files within the `assets` directory.
-Contains the `main.scss` that imports sass files from within the `_sass` directory. This `main.scss` is what gets processed into the theme's main stylesheet `main.css` called by `_layouts/default.html` via `_includes/head.html`.
-
-This directory can include sub-directories to manage assets of similar type, and will be copied over as is, to the final transformed site directory.
-
-### Plugins
-
-Minima comes with [`jekyll-seo-tag`](https://github.com/jekyll/jekyll-seo-tag) plugin preinstalled to make sure your website gets the most useful meta tags. See [usage](https://github.com/jekyll/jekyll-seo-tag#usage) to know how to set it up.
-
-## Usage
-
-### Home Layout
-
-`home.html` is a flexible HTML layout for the site's landing-page / home-page / index-page. <br/>
-
-#### Main Heading and Content-injection
-
-From Minima v2.2 onwards, the *home* layout will inject all content from your `index.md` / `index.html` **before** the **`Posts`** heading. This will allow you to include non-posts related content to be published on the landing page under a dedicated heading. *We recommended that you title this section with a Heading2 (`##`)*.
-
-Usually the `site.title` itself would suffice as the implicit 'main-title' for a landing-page. But, if your landing-page would like a heading to be explicitly displayed, then simply define a `title` variable in the document's front matter and it will be rendered with an `<h1>` tag.
-
-#### Post Listing
-
-This section is optional from Minima v2.2 onwards.<br/>
-It will be automatically included only when your site contains one or more valid posts or drafts (if the site is configured to `show_drafts`).
-
-The title for this section is `Posts` by default and rendered with an `<h2>` tag. You can customize this heading by defining a `list_title` variable in the document's front matter.
-
---
-
-### Customization
-
-To override the default structure and style of minima, simply create the concerned directory at the root of your site, copy the file you wish to customize to that directory, and then edit the file.
-e.g., to override the [`_includes/head.html `](_includes/head.html) file to specify a custom style path, create an `_includes` directory, copy `_includes/head.html` from minima gem folder to `<yoursite>/_includes` and start editing that file.
-
-The site's default CSS has now moved to a new place within the gem itself, [`assets/main.scss`](assets/main.scss). To **override the default CSS**, the file has to exist at your site source. Do either of the following:
-- Create a new instance of `main.scss` at site source.
-  - Create a new file `main.scss` at `<your-site>/assets/`
-  - Add the frontmatter dashes, and
-  - Add `@import "minima";`, to `<your-site>/assets/main.scss`
-  - Add your custom CSS.
-- Download the file from this repo
-  - Create  a new file `main.scss` at `<your-site>/assets/`
-  - Copy the contents at [assets/main.scss](assets/main.scss) onto the `main.scss` you just created, and edit away!
-- Copy directly from Minima 2.0 gem
-  - Go to your local minima gem installation directory ( run `bundle show minima` to get the path to it ).
-  - Copy the `assets/` folder from there into the root of `<your-site>`
-  - Change whatever values you want, inside `<your-site>/assets/main.scss`
-
---
-
-### Customize navigation links
-
-This allows you to set which pages you want to appear in the navigation area and configure order of the links.
-
-For instance, to only link to the `about` and the `portfolio` page, add the following to you `_config.yml`:
-
-```yaml
-header_pages:
-  - about.md
-  - portfolio.md
-```
-
---
-
-### Change default date format
-
-You can change the default date format by specifying `site.minima.date_format`
-in `_config.yml`.
-
-```
-# Minima date format
-# refer to http://shopify.github.io/liquid/filters/date/ if you want to customize this
-minima:
-  date_format: "%b %-d, %Y"
-```
-
---
-
-### Enabling comments (via Disqus)
-
-Optionally, if you have a Disqus account, you can tell Jekyll to use it to show a comments section below each post.
-
-To enable it, add the following lines to your Jekyll site:
-
-```yaml
-  disqus:
-    shortname: my_disqus_shortname
-```
-
-You can find out more about Disqus' shortnames [here](https://help.disqus.com/customer/portal/articles/466208).
-
-Comments are enabled by default and will only appear in production, i.e., `JEKYLL_ENV=production`
-
-If you don't want to display comments for a particular post you can disable them by adding `comments: false` to that post's YAML Front Matter.
-
---
-
-### Social networks
-
-You can add links to the accounts you have on other sites, with respective icon, by adding one or more of the following options in your config:
-
-```yaml
-twitter_username: jekyllrb
-github_username:  jekyll
-dribbble_username: jekyll
-facebook_username: jekyll
-flickr_username: jekyll
-instagram_username: jekyll
-linkedin_username: jekyll
-pinterest_username: jekyll
-youtube_username: jekyll
-googleplus_username: +jekyll
-rss: rss
-
-mastodon:
- - username: jekyll
-   instance: example.com
- - username: jekyll2
-   instance: example.com
-```
-
---
-
-### Enabling Google Analytics
-
-To enable Google Analytics, add the following lines to your Jekyll site:
-
-```yaml
-  google_analytics: UA-NNNNNNNN-N
-```
-
-Google Analytics will only appear in production, i.e., `JEKYLL_ENV=production`
-
---
-
-### Enabling Excerpts on the Home Page
-
-To display post-excerpts on the Home Page, simply add the following to your `_config.yml`:
-
-```yaml
-show_excerpts: true
-```
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/jekyll/minima. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
-
-## Development
-
-To set up your environment to develop this theme, run `script/bootstrap`.
-
-To test your theme, run `script/server` (or `bundle exec jekyll serve`) and open your browser at `http://localhost:4000`. This starts a Jekyll server using your theme and the contents. As you make modifications, your site will regenerate and you should see the changes in the browser after a refresh.
-
-## License
-
-The theme is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+GitHub Pages serves this repo at `https://<username>.github.io/bootstrapgov/` — the repo name becomes part of the URL. Every link and asset on the site is built around that path, and it's also why your local preview lives at `localhost:4000/bootstrapgov/` rather than the plain root. If you ever rename the GitHub repo, this value needs to change to match — otherwise leave it alone.
