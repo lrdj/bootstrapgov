@@ -554,3 +554,24 @@ permalink: /component-test/
 </div>
 
 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+<h2 class="govuk-heading-l">Timeline (HMRC)</h2>
+<p class="govuk-body">Not part of GOV.UK Frontend. This is the <a class="govuk-link" href="https://design.tax.service.gov.uk/hmrc-design-patterns/timeline/">HMRC timeline pattern</a>, ported as plain CSS in <code class="govuk-!-font-size-16">_includes/head.html</code>. Add <code class="govuk-!-font-size-16">govuk-heading-m</code> to the title and <code class="govuk-!-font-size-16">govuk-body</code> to the meta line, as below.</p>
+<ol class="hmrc-timeline">
+  <li class="hmrc-timeline__event">
+    <h3 class="hmrc-timeline__event-title govuk-heading-m">HMRC is processing your refund</h3>
+    <span class="hmrc-timeline__event-meta govuk-body">Updated 6 September 2026</span>
+    <p class="govuk-body">This will be paid to your bank account.</p>
+  </li>
+  <li class="hmrc-timeline__event">
+    <h3 class="hmrc-timeline__event-title govuk-heading-m">HMRC owes you a refund</h3>
+    <span class="hmrc-timeline__event-meta govuk-body">Sent 30 August 2026</span>
+    <p class="govuk-body"><a class="govuk-link" href="#">Find out why you paid too much</a>.</p>
+  </li>
+  <li class="hmrc-timeline__event">
+    <h3 class="hmrc-timeline__event-title govuk-heading-m">Your tax calculation was completed</h3>
+    <span class="hmrc-timeline__event-meta govuk-body">Sent 23 August 2026</span>
+  </li>
+</ol>
+
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">

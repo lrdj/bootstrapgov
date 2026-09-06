@@ -38,6 +38,36 @@
 	    font-style: normal;
 	  }
 
+	  /* HMRC timeline pattern — ported from hmrc-frontend's
+	     hmrc/components/timeline/_timeline.scss (not part of GOV.UK Frontend).
+	     Use with govuk-heading-m on the title and govuk-body on the meta line. */
+	  .hmrc-timeline {
+	    border-left: 5px solid #1d70b8;
+	    margin: 0 0 30px;
+	    padding: 0;
+	  }
+	  .hmrc-timeline__event {
+	    position: relative;
+	    list-style: none;
+	    padding-left: 10px;
+	    padding-bottom: 20px;
+	  }
+	  @media (min-width: 40.0625em) {
+	    .hmrc-timeline__event { padding-bottom: 30px; }
+	  }
+	  .hmrc-timeline__event:last-child { padding-bottom: 0; }
+	  .hmrc-timeline__event-title { margin-bottom: 5px; }
+	  .hmrc-timeline__event-title::before {
+	    content: "";
+	    position: absolute;
+	    left: 0;
+	    top: 0.5em;
+	    width: 4px;
+	    height: 5px;
+	    background-color: #1d70b8;
+	  }
+	  .hmrc-timeline__event-meta { display: block; margin-bottom: 15px; }
+
 	</style>
 
 	

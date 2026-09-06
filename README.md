@@ -78,6 +78,10 @@ Two things to watch for when pasting:
 
 `component-test.md` in this repo is a working reference — it's a single page with one of nearly every component, copied straight from the vendored package, so you can see what "correctly pasted" looks like and copy the pattern.
 
+### Patterns that aren't in GOV.UK Frontend
+
+Some patterns you'll want (the HMRC timeline, for example) live in other departments' frontend packages rather than GOV.UK Frontend, so they don't come with the vendored CSS. The workaround is to compile their SCSS to plain CSS and paste it into the `<style>` block in `_includes/head.html`. The HMRC timeline is already done this way — see the "Timeline (HMRC)" section at the bottom of `component-test.md` for the markup to copy.
+
 ## The example journey
 
 `examples/start.md` → `question.md` → `check-your-answers.md` → `confirmation.md` is a small working demo of a typical GOV.UK service flow, click-through-able end to end. It's a good starting template if you're mocking up a real journey — duplicate these files and edit the content rather than starting from a blank page.
