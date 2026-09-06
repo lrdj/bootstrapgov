@@ -2,6 +2,8 @@
 layout: default
 title: Task list
 permalink: /examples/task-list/
+order: 5
+description: A task list for multi-part applications, separate from the journey.
 ---
 
 <div class="govuk-grid-row">

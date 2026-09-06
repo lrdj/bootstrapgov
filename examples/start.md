@@ -2,6 +2,8 @@
 layout: default
 title: Start page example
 permalink: /examples/start/
+order: 1
+description: The first page of the journey, with a green start button.
 hide_service_nav: true
 ---
 

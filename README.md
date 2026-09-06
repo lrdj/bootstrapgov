@@ -86,6 +86,8 @@ Some patterns you'll want (the HMRC timeline, for example) live in other departm
 
 `examples/start.md` → `question.md` → `check-your-answers.md` → `confirmation.md` is a small working demo of a typical GOV.UK service flow, click-through-able end to end. It's a good starting template if you're mocking up a real journey — duplicate these files and edit the content rather than starting from a blank page.
 
+`examples/index.md` lists every page in the folder automatically at `/examples/`, sorted by the `order:` value in each page's front matter, with the `description:` shown underneath. When you add a page to `examples/`, give it those two lines and it'll appear in the list without editing anything else. The home page links to this index and to the component test page.
+
 ## Publishing
 
 ```

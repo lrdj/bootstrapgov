@@ -2,6 +2,8 @@
 layout: default
 title: Check your answers
 permalink: /examples/check-your-answers/
+order: 3
+description: Summary list of answers with change links.
 ---
 
 <a href="{{ site.baseurl }}/examples/question/" class="govuk-back-link">Back</a>

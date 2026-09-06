@@ -2,6 +2,8 @@
 layout: default
 title: Content page
 permalink: /examples/content/
+order: 6
+description: A plain content page with headings, lists and inset text.
 ---
 
 <a href="{{ site.baseurl }}/" class="govuk-back-link">Back</a>

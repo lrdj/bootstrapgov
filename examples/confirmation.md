@@ -2,6 +2,8 @@
 layout: default
 title: Confirmation page example
 permalink: /examples/confirmation/
+order: 4
+description: Green panel confirming the application was sent.
 ---
 
 <div class="govuk-grid-row">

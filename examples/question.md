@@ -2,6 +2,8 @@
 layout: default
 title: Question page
 permalink: /examples/question/
+order: 2
+description: A single question with radios and a continue button.
 ---
 
 <a href="{{ site.baseurl }}/examples/start/" class="govuk-back-link">Back</a>
